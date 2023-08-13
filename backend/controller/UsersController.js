@@ -4,14 +4,11 @@ const user = new UserModel()
 const store = async (req,res) => {
     try {
         const dataToInsert = {
-            "name": "harvy G",
-            "age": 23,
-            "hobbies": [
-            "video Games",
-            "Programming"
-            ]
+            "name": req.body.name,
+            "age": req.body.age,
+            "hobbies": req.body.hobbies
         }
-
+        
         await user.insertOne(dataToInsert)
 
         res.setHeader('Content-Type', 'application/json')
