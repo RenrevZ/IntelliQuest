@@ -6,11 +6,23 @@ class User extends BaseModel {
         super()
     }
 
-    async insertOne(data){
+    async collection(){
         const db = await this.db
-        const collection = db.collection('users')
+        const collection = db.collection(model)
 
-        const result = await collection.insertOne(data)
+        return collection
+    }
+
+    async insertOne(data){
+        const userCollection = await this.collection();
+        await userCollection.insertOne(data)
+    }
+
+    async getAllUser(){
+        const userCollection = await this.collection();
+        const users = await userCollection.find().toArray();
+        
+        return users;
     }
 }
 
