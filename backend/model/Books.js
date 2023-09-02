@@ -1,28 +1,55 @@
-const BaseModel = require('./BaseModel')
+const mongoose = require('mongoose')
 
-class Books extends BaseModel {
-    constructor(){
-        super()
-    }
+const BookSchema = new mongoose.Schema({
+    "Book Cover":{
+        data: Buffer,
+        contentType: String
+    },
+    "Book Title": {
+        type:String,
+        required:true,
+        maxlength: 50
+    },
+    "Book Description": {
+        type:String,
+        required:true,
+        maxlength: 100
+    },
+    "Author" : {
+        type:String,
+        required:true,
+        maxlength: 50
+    },
+    "Ratings":Number,
+    "Category" : String,
+    "Publish Date": String,
+    "added By":String,
+    "Comments" : Object,
+})
 
-    async collection(){
-        const db = await this.db
-        const collection = db.collection('books')
+// class Books extends BaseModel {
+//     constructor(){
+//         super()
+//     }
 
-        return collection
-    }
+//     async collection(){
+//         const db = await this.db
+//         const collection = db.collection('books')
 
-    async insertOne(data){
-        const bookCollection = await this.collection();
-        await bookCollection.insertOne(data)
-    }
+//         return collection
+//     }
 
-    async getAllBooks(){
-        const bookCollection = await this.collection();
-        const books = await bookCollection.find().toArray();
+//     async insertOne(data){
+//         const bookCollection = await this.collection();
+//         await bookCollection.insertOne(data)
+//     }
+
+//     async getAllBooks(){
+//         const bookCollection = await this.collection();
+//         const books = await bookCollection.find().toArray();
         
-        return books;
-    }
-}
+//         return books;
+//     }
+// }
 
-module.exports = Books
+module.exports = mongoose.model('Books',BookSchema)

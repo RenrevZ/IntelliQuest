@@ -1,29 +1,29 @@
-const BaseModel = require('./BaseModel')
-const model = 'users'
+// const BaseModel = require('./BaseModel')
+// const model = 'users'
 
-class User extends BaseModel {
-    constructor(){
-        super()
-    }
+// class User extends BaseModel {
+//     constructor(){
+//         super()
+//     }
 
-    async collection(){
-        const db = await this.db
-        const collection = db.collection(model)
+//     async collection(){
+//         const db = await this.db
+//         const collection = db.collection(model)
 
-        return collection
-    }
+//         return collection
+//     }
 
-    async insertOne(data){
-        const userCollection = await this.collection();
-        await userCollection.insertOne(data)
-    }
+//     async insertOne(data){
+//         const userCollection = await this.collection();
+//         await userCollection.insertOne(data)
+//     }
 
-    async getAllUser(){
-        const userCollection = await this.collection();
-        const users = await userCollection.find().toArray();
+//     async getAllUser(){
+//         const userCollection = await this.collection();
+//         const users = await userCollection.find().toArray();
         
-        return users;
-    }
-}
+//         return users;
+//     }
+// }
 
-module.exports = User
+// module.exports = User

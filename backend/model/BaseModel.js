@@ -1,29 +1,14 @@
-const mongoDb = require('mongodb').MongoClient
+require('dotenv').config()
+const mongoose = require('mongoose')
 
-const url = 'mongodb://127.0.0.1:27017';
+mongoose.connect(process.env.DATABASE_URL,{ useNewUrlParser:true })
 
-const dbName = 'CookingReceipeEbook';
-
-let dbInstance = null;
-
-async function ConnectDatabase(){
-    if (dbInstance) {
-        return dbInstance;
-      }
-    
-    const client = await mongoDb.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
-    dbInstance = client.db(dbName);
-
-    return dbInstance;
+const ConnectDatabase = async () => {
+    const db = mongoose.connection
+    db.on('error',(error) => console.log(error))
+    db.once('open',() => console.log('Database Connected'))
 }
 
-
-class BaseModel { 
-    constructor(){
-        this.db = ConnectDatabase()
-    }
-}
-
-module.exports = BaseModel
+module.exports = ConnectDatabase
 
 
