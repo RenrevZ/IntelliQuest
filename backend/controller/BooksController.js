@@ -21,10 +21,10 @@ const storeBooks = async (req,res) => {
             console.log(err);
             return res.status(500).json({ error: err.message });
           }
-          console.log(req.body)
+          
           const dataToInsert = {
             "Book Cover": {
-              data: fs.readFileSync(req.file.path),
+              data: req.file ? fs.readFileSync(req.file.path) : '',
               contentType: 'image/png',
             },
             "Book Title": req.body.BookTitle,
