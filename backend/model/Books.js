@@ -1,19 +1,19 @@
 const mongoose = require('mongoose')
 
 const BookSchema = new mongoose.Schema({
-    "Book Cover":{
-        data: Buffer,
-        contentType: String
-    },
-    "Book Title": {
+    "BookCover":String,
+    "BookTitle": {
         type:String,
         required:true,
         maxlength: 50
     },
-    "Book Description": {
+    "BookDescription": {
         type:String,
         required:true,
-        maxlength: 100
+        maxlength: 500
+    },
+    "BookGenre":{
+        type:Array
     },
     "Author" : {
         type:String,
@@ -22,8 +22,8 @@ const BookSchema = new mongoose.Schema({
     },
     "Ratings":Number,
     "Category" : String,
-    "Publish Date": String,
-    "added By":String,
+    "PublishDate": String,
+    "addedBy":String,
     "Comments" : Object,
 })
 

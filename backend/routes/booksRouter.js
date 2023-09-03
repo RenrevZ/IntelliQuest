@@ -1,7 +1,9 @@
 const router  = require('./router')
 const BooksController = require('../controller/BooksController')
 
+
+router.get('/getAllbooks',BooksController.getAllBooks)
 router.post('/storeBooks',BooksController.storeBooks)
-router.get('/getAllBooks',BooksController.getAllBooks)
+router.get('/getSinglebook/:id',BooksController.getSingleBook)
 
 module.exports = router

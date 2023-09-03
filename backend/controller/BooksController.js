@@ -2,13 +2,15 @@ const books = require('../model/Books')
 let fs = require('fs');
 let path = require('path');
 const multer  = require('multer')
+require('dotenv').config()
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, 'uploads');
     },
     filename: (req, file, cb) => {
-      cb(null, file.fieldname + '-' + Date.now());
+      const fileExtension = path.extname(file.originalname);
+      cb(null, file.fieldname + '-' + file.originalname + fileExtension);
     },
   });
 
@@ -21,22 +23,24 @@ const storeBooks = async (req,res) => {
             console.log(err);
             return res.status(500).json({ error: err.message });
           }
+
+          // const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+          const fileExtension = path.extname(req.file.originalname);
+          const generatedFilename = req.file.fieldname + '-' + req.file.originalname+ fileExtension;
           
           const dataToInsert = {
-            "Book Cover": {
-              data: req.file ? fs.readFileSync(req.file.path) : '',
-              contentType: 'image/png',
-            },
-            "Book Title": req.body.BookTitle,
-            "Book Description": req.body.BookDescription,
+            "BookCover": process.env.APP_URL +'uploads/'+ generatedFilename,
+            "BookGenre": req.body.genreSelected,
+            "BookTitle": req.body.BookTitle,
+            "BookDescription": req.body.BookDescription,
             "Author": req.body.Author,
             "Ratings": "",
             "Category": "",
-            "Publish Date": req.body.datePublished,
-            "Added By": "",
+            "PublishDate": req.body.datePublished,
+            "AddedBy": "",
             "Comments": {},
           };
-    
+
           const insertBook = new books(dataToInsert);
     
           await insertBook.save(dataToInsert);
@@ -50,11 +54,37 @@ const storeBooks = async (req,res) => {
 };
 
 const getAllBooks = async (req,res) => {
-    const getAllBooks = await books.getAllBooks()
+    const getAllBooks = await books.aggregate([
+      {
+        $unwind: "$BookGenre" // Deconstruct the BookGenre array
+      },
+      {
+        $group: {
+          _id: "$BookGenre",
+          books: { $push: "$$ROOT" } // Push the entire document into an array
+        }
+      }
+    ]);
 
     res.setHeader('Content-Type', 'application/json')
        .status(200)
        .send(getAllBooks);
 }
 
-module.exports = {storeBooks,getAllBooks}
+const getSingleBook = async (req,res) => {
+    try{
+      const singleBook = await books.findById(req.params.id);
+
+      if (!singleBook) {
+        return res.status(404).json({ error: 'Book not found' });
+      }
+      res.setHeader('Content-Type', 'application/json')
+        .status(200)
+        .send(singleBook);
+    }catch(err){
+      console.error('Error fetching a single book:', err);
+      res.status(404).json({ error: 'There was an error fetching the book' });
+    }
+}
+
+module.exports = {storeBooks,getAllBooks,getSingleBook}
