@@ -7,6 +7,11 @@ const BookSchema = new mongoose.Schema({
         required:true,
         maxlength: 50
     },
+    "BookSubtitle":{
+        type:String,
+        required:true,
+        maxlength: 100
+    },
     "BookDescription": {
         type:String,
         required:true,

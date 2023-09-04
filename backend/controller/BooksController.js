@@ -24,6 +24,7 @@ const storeBooks = async (req,res) => {
             return res.status(500).json({ error: err.message });
           }
 
+          console.log(req.body)
           // const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
           const fileExtension = path.extname(req.file.originalname);
           const generatedFilename = req.file.fieldname + '-' + req.file.originalname+ fileExtension;
@@ -32,6 +33,7 @@ const storeBooks = async (req,res) => {
             "BookCover": process.env.APP_URL +'uploads/'+ generatedFilename,
             "BookGenre": req.body.genreSelected,
             "BookTitle": req.body.BookTitle,
+            "BookSubtitle": req.body.BooksubTitle,
             "BookDescription": req.body.BookDescription,
             "Author": req.body.Author,
             "Ratings": "",
@@ -39,7 +41,7 @@ const storeBooks = async (req,res) => {
             "PublishDate": req.body.datePublished,
             "AddedBy": "",
             "Comments": {},
-          };
+          }
 
           const insertBook = new books(dataToInsert);
     
