@@ -30,6 +30,7 @@ const BookSchema = new mongoose.Schema({
     "PublishDate": String,
     "addedBy":String,
     "Comments" : Object,
+    "isFav":Boolean
 })
 
 // class Books extends BaseModel {

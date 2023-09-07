@@ -13,14 +13,17 @@ server.use(cors());
 server.use(express.json());
 server.use(express.urlencoded({extended:true}))
 server.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+const ip = '192.168.100.23'
 
 
 // ROUTER IMPORT
 // const userRoute = require('./routes/userRouter')
 const booksRoute = require('./routes/booksRouter')
+const ReviewsRoute = require('./routes/reviewsRoutes')
 
 // API ROUTES
 server.use('/books',booksRoute)
+server.use('/reviews',ReviewsRoute)
 // server.use('/users',userRoute)
 
 

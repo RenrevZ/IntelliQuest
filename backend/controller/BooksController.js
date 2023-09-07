@@ -89,4 +89,25 @@ const getSingleBook = async (req,res) => {
     }
 }
 
-module.exports = {storeBooks,getAllBooks,getSingleBook}
+const addToFav = async(req,res) => {
+  try{
+    const singleBook = await books.updateOne(
+                        { _id: req.body.BookID },
+                        {
+                          $set: { isFav:true },
+                        }
+                      );
+
+    if (!singleBook) {
+      return res.status(404).json({ error: 'Book not found' });
+    }
+    res.setHeader('Content-Type', 'application/json')
+      .status(200)
+      .json({ message : 'successfully added book to favorite'});
+  }catch(err){
+    console.error('Error fetching a single book:', err);
+    res.status(404).json({ error: 'There was an error fetching the book' });
+  }
+}
+
+module.exports = {storeBooks,getAllBooks,getSingleBook,addToFav}
