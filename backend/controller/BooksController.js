@@ -110,4 +110,68 @@ const addToFav = async(req,res) => {
   }
 }
 
-module.exports = {storeBooks,getAllBooks,getSingleBook,addToFav}
+
+const fetchFav = async (req,res) => {
+  try{
+      const Favbooks = await books.aggregate([
+        {
+          $match: {
+            isFav: true 
+          }
+        },
+        {
+          $unwind: "$BookGenre" 
+        },
+        {
+          $group: {
+            _id: "$BookGenre",
+            books: { $push: "$$ROOT" } 
+          }
+        }
+      ]);
+
+      res.setHeader('Content-Type', 'application/json')
+        .status(200)
+        .send(Favbooks);
+  }catch(error){
+    res.status(404).json({ error: error.message })
+  }
+}
+
+const SearchBooks = async (req,res) => {
+    try{
+      const book = await books.aggregate([
+        {
+          $match: {
+            BookTitle: {
+              $regex: req.body.search,  // Search term from req.body
+              $options: 'i'  // 'i' for case-insensitive
+            }
+          }
+        },
+        {
+          $unwind: "$BookGenre" 
+        },
+        {
+          $group: {
+            _id: "$BookGenre",
+            books: { $push: "$$ROOT" } 
+          }
+        }
+      ]);
+
+      res.setHeader('Content-Type', 'application/json')
+        .status(200)
+        .send(book);
+  }catch(error){
+    res.status(404).json({ error: error.message })
+  }
+}
+
+module.exports = {storeBooks,
+                  getAllBooks,
+                  getSingleBook,
+                  addToFav,
+                  fetchFav,
+                  SearchBooks
+                }
