@@ -24,8 +24,6 @@ const storeBooks = async (req,res) => {
             return res.status(500).json({ error: err.message });
           }
 
-          console.log(req.body)
-          // const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
           const fileExtension = path.extname(req.file.originalname);
           const generatedFilename = req.file.fieldname + '-' + req.file.originalname+ fileExtension;
           
@@ -58,12 +56,12 @@ const storeBooks = async (req,res) => {
 const getAllBooks = async (req,res) => {
     const getAllBooks = await books.aggregate([
       {
-        $unwind: "$BookGenre" // Deconstruct the BookGenre array
+        $unwind: "$BookGenre" 
       },
       {
         $group: {
           _id: "$BookGenre",
-          books: { $push: "$$ROOT" } // Push the entire document into an array
+          books: { $push: "$$ROOT" }
         }
       }
     ]);
@@ -144,8 +142,8 @@ const SearchBooks = async (req,res) => {
         {
           $match: {
             BookTitle: {
-              $regex: req.body.search,  // Search term from req.body
-              $options: 'i'  // 'i' for case-insensitive
+              $regex: req.body.search,
+              $options: 'i'
             }
           }
         },
